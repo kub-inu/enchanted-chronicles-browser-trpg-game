@@ -1,0 +1,70 @@
+$csp = (new CspPolicy())
+    ->addSource('img-src', 'https://developer.mozilla.org')
+    ->addSource('script-src', 'https://cdn.jsdelivr.net')
+    ->addSource('connect-src', 'https://api.example.com');
+
+SecurityHeaders::send($csp);
+
+
+$csp = (new CspPolicy())
+    ->setDirective('default-src', ["'self'"])
+    ->setDirective('script-src', ["'self'"])
+    ->setDirective('style-src', ["'self'", "'unsafe-inline'"])
+    ->setDirective('img-src', ["'self'", 'data:'])
+    ->setDirective('font-src', ["'self'"])
+    ->setDirective('connect-src', ["'self'"])
+    ->setDirective('object-src', ["'none'"])
+    ->setDirective('base-uri', ["'self'"])
+    ->setDirective('form-action', ["'self'"])
+    ->setDirective('frame-ancestors', ["'none'"]);
+
+SecurityHeaders::send($csp);
+
+
+
+
+directive	čo kontroluje
+script-src	JS
+style-src	CSS
+img-src	obrázky
+connect-src	API
+font-src	fonty
+frame-src	iframe
+object-src	embed
+frame-ancestors	kto embeduje teba
+
+default-src 'self'
+    všetko len z tvojej domény, ak to nemá vlastné pravidlo
+script-src 'self'
+    JS len z tvojej domény
+    žiadne cudzie CDN scripts
+    žiadny inline JS
+style-src 'self' 'unsafe-inline'
+    CSS z tvojej domény
+    inline CSS povolené
+    toto tam dávam len preto, lebo veľa appiek má inline štýly
+img-src 'self' data:
+    obrázky z tvojej domény
+    plus base64 obrázky
+font-src 'self'
+    fonty len z tvojej domény
+connect-src 'self'
+    fetch / ajax / api len na tvoju doménu
+object-src 'none'
+    zakáže embed/object bordel
+base-uri 'self'
+    zakáže cudzie base URL
+form-action 'self'
+    formuláre môžu submitovať len na tvoju doménu
+frame-ancestors 'none'
+    nikto ťa nemôže embednúť do iframe
+
+
+->setDirective('script-src', ["'self'", 'https://cdn.jsdelivr.net'])
+
+->setDirective('style-src', ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'])
+->setDirective('font-src', ["'self'", 'https://fonts.gstatic.com'])
+
+->setDirective('img-src', ["'self'", 'data:', 'https://images.example.com'])
+
+->setDirective('connect-src', ["'self'", 'https://api.example.com'])

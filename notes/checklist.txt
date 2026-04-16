@@ -1,0 +1,118 @@
+Checklist pripravenosti infraštruktúry
+======================================
+
+Štruktúra projektu
+v projekte už nemáš staré duplicitné priečinky typu Repositories, Services, Validators mimo modulov
+    > v old sú staré validátory, takže nefunguje registrácia používateľa
+
+Router
+ router správne matchuje dynamické parametre {id}
+ router správne matchuje voliteľné parametre {token?}
+ route groups fungujú pre prefix
+ route groups fungujú pre middleware
+ router vie vyhodiť čitateľnú chybu pri neexistujúcom module
+ router vie vyhodiť čitateľnú chybu pri neexistujúcom controllery
+ router vie vyhodiť čitateľnú chybu pri neexistujúcej metóde
+
+Request
+ path neobsahuje query string (?)
+ request vie čítať files, ak ich používaš
+ request vracia konzistentné hodnoty
+ request funguje rovnako pre web aj AJAX flow (? ešte som neskúšal axios na routu)
+
+Response
+ response neposiela hlavičky neskoro (?)
+ AJAX response flow je oddelený a čitateľný (?)
+ nemáš konflikt medzi klasickým renderom a JSON outputom (?)
+
+Error handling a debug
+ fatal error vieš zachytiť alebo aspoň zalogovať
+ v dev režime vidíš dôvod pádu
+ chyba v controlleri sa dá dohľadať bez slepého hádania
+
+Logging
+ loguješ bezpečnostné incidenty
+ loguješ neautorizované prístupy
+ log formát je čitateľný
+ vieš rýchlo odlíšiť debug log od error logu
+
+Auth a session základ
+ neexistujú magické session zápisy roztrúsené po projekte
+
+CSRF a security základ
+ secrets nie sú natvrdo rozhádzané po kóde
+ upload cesta je oddelená od zdrojáku, ak používaš uploady
+
+Database vrstva
+ error z DB vieš zalogovať
+ DB credentials nie sú rozliate po projekte
+
+Scripts / automatizácia
+ máš samostatné miesto pre automatické skripty
+ skripty vedia načítať init/autoload
+ skripty nepoužívajú web router
+ cron skripty sa dajú spúšťať samostatne
+ chyba v scripte sa dá zalogovať
+ script logika nie je natlačená do jedného monolitu
+
+Konfigurácia
+ config má jasné miesto
+ aplikácia sa vie spustiť z jedného vstupného bodu
+ init/bootstrap nerobí business logiku
+ konštanty a základné cesty sú centralizované
+ zmena štruktúry projektu nevyžaduje opravovať 50 hardcoded pathov
+
+
+
+
+
+
+
+
+
+
+
+
+
+Vyhodnotenie pripravenosti
+==========================
+
+Stav A — pripravené na ďalšiu implementáciu
+Ak máš väčšinu z tohto hotovú:
+
+router stabilný
+autoload stabilný
+view/render stabilný
+error handling použiteľný
+auth/session základ funkčný
+DB vrstva funkčná
+moduly sa dajú pridávať bez chaosu
+
+
+tak môžeš ďalej implementovať features.
+
+Stav B — ešte treba stabilizovať infra
+Ak ti stále padá:
+
+namespace/autoload
+render/view
+routing
+error/logging
+
+tak ešte neinštaluj ďalšie features vo veľkom, lebo budeš len vrstviť chaos na chaos.
+
+
+
+Minimálne “GO” podmienky podľa mňa
+Pred ďalšou veľkou implementáciou by som chcel mať určite hotové toto:
+
+ autoload stabilný
+ router stabilný
+ request/response stabilné
+ view render stabilný
+ error handler + logovanie funkčné
+ auth/session základ funkčný
+ DB pripojenie a repository flow funkčné
+ nový modul vieš založiť bez zásahu do celej appky
+
+Ak tieto body sedia, infra je dosť pripravená.

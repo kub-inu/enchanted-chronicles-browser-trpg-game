@@ -1,0 +1,81 @@
+Poznámky k vývoji Auth systému
+==============================
+
+Modul obsahuje
+1. Registráciu
+2. Prihlásenie
+3. Odhlásenie
+
+class Auth
+{
+    private const SESSION_TIMEOUT = 60 * 60 * 2; // 2 hodiny
+
+    public static function check(): bool
+    {
+        $auth = Session::get('auth');
+
+        if (empty($auth['user_id'])) {
+            return false;
+        }
+
+        $lastActivity = Session::get('last_activity');
+
+        if ($lastActivity && (time() - $lastActivity > self::SESSION_TIMEOUT)) {
+            self::logout();
+            return false;
+        }
+
+        Session::set('last_activity', time());
+        return true;
+    }
+
+    // ostatné metódy...
+}
+
+<?php
+
+function abort(int $statusCode, string $message = '', array $context = []): never
+{
+    throw new HttpException($statusCode, $message, $context);
+}
+
+
+
+
+Logger::warning('Forbidden action attempt', [
+    'user_id' => Auth::id(),
+    'method' => $_SERVER['REQUEST_METHOD'] ?? null,
+    'uri' => $_SERVER['REQUEST_URI'] ?? null,
+    'ip' => $_SERVER['REMOTE_ADDR'] ?? null,
+]);
+
+
+Jednotný JSON formát
+
+{
+  "success": true,
+  "message": "User created successfully",
+  "data": {
+    "id": 5
+  }
+}
+
+{
+  "success": false,
+  "error": {
+    "code": 422,
+    "message": "Validation failed",
+    "fields": {
+      "email": ["Email is required"],
+      "password": ["Password must have at least 8 characters"]
+    }
+  }
+}
+
+{
+  "success": false,
+  "error": {
+    "code": 403,
+    "message": "You do not have permission to perform this action"
+  }
+}
