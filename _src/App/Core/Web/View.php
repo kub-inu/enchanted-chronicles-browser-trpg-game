@@ -43,12 +43,6 @@ class View
         }
 
         require ROOT_DIR . '/views/layouts/publicWeb.php';
-
-        // if(!empty($_SESSION['token'])){ //Ak je user prihlásený a není zadefinovaný layout - všeobecné prepínatko
-        //     require ROOT_DIR . '/views/layouts/dashboard.php';
-        // }else{
-        //     require ROOT_DIR . '/views/layouts/publicWeb.php';
-        // }
     }
 
 

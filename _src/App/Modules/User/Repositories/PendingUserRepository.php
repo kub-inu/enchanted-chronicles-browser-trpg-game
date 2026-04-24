@@ -29,7 +29,7 @@ class PendingUserRepository{
     public static function findByTokenHash(string $token): array
     {
         $db = new Database();
-        $db->query("SELECT * FROM users_pending WHERE token = :token AND expires_at > NOW() LIMIT 1");
+        $db->query("SELECT * FROM users_pending WHERE token = :token LIMIT 1");
         $db->bind(":token", $token);
         $result = $db->single();
 
@@ -41,19 +41,30 @@ class PendingUserRepository{
         //Vytvorí záznam
         $db = new Database();
         $db->query("INSERT INTO users_pending 
-            (email, username, token, payload_json, expires_at) 
+            (email, username, token, password, expires_at) 
             VALUES 
-            (:email, :username, :token, :payload_json, :expires_at)"
+            (:email, :username, :token, :password, :expires_at)"
             );
         $db->bind(":email", $data['email']);
         $db->bind(":username", $data['username']);
         $db->bind(":token", $data['token']);
-        $db->bind(":payload_json", $data['payload_json']);
+        $db->bind(":password", $data['password']);
         $db->bind(":expires_at", $data['expires_at']);
         $db->execute();
 
         return $db->lastInsertId();
     }
+
+    public static function updateTokenExpiration($id, $newTokenHash, $newExpire){
+
+        $db = new Database();
+        $db->query('UPDATE users_pending SET token = :newToken, expires_at = :newExpirationDate WHERE id = :id');
+        $db->bind(':newToken', $newTokenHash);
+        $db->bind(':newExpirationDate', $newExpire);
+        $db->bind(':id', $id);
+        $db->execute();
+    }
+
 
     public static function delete(int $id, ?Database $db = null): bool
     {

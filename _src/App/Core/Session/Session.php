@@ -51,7 +51,7 @@ class Session
     public static function all(): array
     {
         self::start();
-        return $_SESSION;
+        return $_SESSION; 
     }
 
     public static function regenerate(bool $deleteOldSession = true): void
@@ -100,5 +100,13 @@ class Session
         unset($_SESSION[$key]);
 
         return $value;
+    }
+
+    public static function debugAll()
+    {
+        self::start();
+        echo '<pre>';
+        print_r($_SESSION);
+        echo '</pre>';
     }
 }

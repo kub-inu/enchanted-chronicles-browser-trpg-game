@@ -1,0 +1,329 @@
+Use-Case:
+=========
+
+ACCOUNT REGISTRATION
+====================
+1. Používateľ si môže vytvoriť účet ✔️
+2. Používateľ musí vyplniť povinné registračné údaje
+3. Systém vie validovať formát vstupných údajov pri registrácii
+4. Systém vie skontrolovať minimálnu dĺžku hesla
+5. Systém vie skontrolovať zhodu hesla a potvrdenia hesla
+6. Systém vie odmietnuť registráciu s už existujúcim emailom
+7. Systém vie odmietnuť registráciu s už existujúcim používateľským menom
+8. Systém vie odmietnuť neplatné používateľské meno
+9. Systém vie odmietnuť neplatný email
+10. Systém vie sanitizovať registračné vstupy
+11. Systém vie vytvoriť pending registráciu pred aktiváciou účtu
+12. Systém vie uložiť registračné dáta do dočasného úložiska
+13. Systém vie vygenerovať aktivačný token
+14. Systém vie token bezpečne uložiť
+15. Systém vie odoslať aktivačný email
+16. Systém vie zobraziť informáciu, že aktivácia bola odoslaná
+17. Systém vie odmietnuť opakovanú registráciu s rovnakým emailom počas pending stavu
+18. Systém vie odmietnuť opakovanú registráciu s rovnakým username počas pending stavu
+19. Systém vie priradiť novému účtu predvolený stav
+20. Systém vie priradiť novému účtu predvolenú rolu
+21. Systém vie priradiť novému účtu dátum registrácie
+22. Systém vie zaznamenať IP alebo request metadata pri registrácii
+23. Systém vie odmietnuť registráciu pri porušení business pravidiel
+24. Systém vie korektne ukončiť neúspešnú registráciu bez vytvorenia nekonzistentných dát
+
+ACCOUNT ACTIVATION
+==================
+25. Používateľ môže kliknúť na aktivačný odkaz z emailu
+26. Systém vie prijať aktivačný token z URL
+27. Systém vie overiť existenciu aktivačného tokenu
+28. Systém vie overiť platnosť aktivačného tokenu
+29. Systém vie overiť expiráciu aktivačného tokenu
+30. Systém vie odmietnuť neplatný token
+31. Systém vie odmietnuť expirovaný token
+32. Systém vie odmietnuť už použitý token
+33. Systém vie dokončiť registráciu po úspešnej aktivácii
+34. Systém vie presunúť dáta z pending registrácie do hlavnej user tabuľky
+35. Systém vie vytvoriť finálny používateľský účet
+36. Systém vie označiť účet ako aktivovaný
+37. Systém vie nastaviť dátum aktivácie účtu
+38. Systém vie odstrániť alebo zneplatniť pending registráciu po aktivácii
+39. Systém vie odstrániť alebo zneplatniť aktivačný token po použití
+40. Systém vie zobraziť úspešnú aktiváciu účtu
+41. Systém vie presmerovať používateľa po aktivácii
+42. Systém vie chrániť endpoint aktivácie pred opakovaným použitím
+43. Systém vie logovať úspešnú aktiváciu
+44. Systém vie logovať zlyhanú aktiváciu
+
+RESEND ACTIVATION
+=================
+45. Používateľ môže požiadať o nový aktivačný odkaz
+46. Systém vie overiť, že účet ešte nie je aktivovaný
+47. Systém vie overiť, že pending registrácia existuje
+48. Systém vie vytvoriť nový aktivačný token
+49. Systém vie zneplatniť starý aktivačný token
+50. Systém vie odoslať nový aktivačný email
+51. Systém vie obmedziť frekvenciu obnovy aktivačného odkazu
+52. Systém vie odmietnuť obnovu pre už aktivovaný účet
+53. Systém vie odmietnuť obnovu pre neexistujúci pending účet
+54. Systém vie evidovať počet pokusov o resend
+55. Systém vie zobraziť používateľovi stav obnovy aktivačného odkazu
+
+LOGIN
+=====
+56. Používateľ sa môže prihlásiť emailom a heslom
+57. Používateľ sa môže prihlásiť používateľským menom a heslom
+58. Systém vie validovať prázdne prihlasovacie údaje
+59. Systém vie nájsť účet podľa login identifikátora
+60. Systém vie overiť hash hesla
+61. Systém vie odmietnuť nesprávne heslo
+62. Systém vie odmietnuť neexistujúci účet
+63. Systém vie odmietnuť prihlásenie neaktivovaného účtu
+64. Systém vie odmietnuť prihlásenie zablokovaného účtu
+65. Systém vie vytvoriť session po úspešnom prihlásení
+66. Systém vie regenerovať session ID po prihlásení
+67. Systém vie uložiť identitu používateľa do session
+68. Systém vie uložiť čas poslednej aktivity do session
+69. Systém vie uložiť čas prihlásenia do session
+70. Systém vie presmerovať používateľa po úspešnom login-e
+71. Systém vie zobraziť chybové hlášky pri neúspešnom login-e
+72. Systém vie chrániť login endpoint proti zneužitiu
+73. Systém vie logovať úspešné prihlásenie
+74. Systém vie logovať neúspešné prihlásenie
+75. Systém vie odlíšiť autentifikačnú chybu od systémovej chyby
+
+LOGOUT
+======
+76. Používateľ sa môže odhlásiť z aplikácie
+77. Systém vie zrušiť session pri odhlásení
+78. Systém vie odstrániť autentifikačné dáta zo session
+79. Systém vie regenerovať session ID po odhlásení
+80. Systém vie presmerovať používateľa po odhlásení
+81. Systém vie bezpečne ukončiť prihlásenie aj pri poškodenom session stave
+82. Systém vie logovať odhlásenie používateľa
+
+SESSION MANAGEMENT
+==================
+83. Systém vie udržiavať session prihláseného používateľa
+84. Systém vie rozpoznať, či je používateľ prihlásený
+85. Systém vie rozpoznať, či je používateľ hosť
+86. Systém vie skontrolovať platnosť session pri každom requeste
+87. Systém vie uložiť identifikátor používateľa do session
+88. Systém vie uložiť rolu používateľa do session
+89. Systém vie uložiť poslednú aktivitu používateľa do session
+90. Systém vie aktualizovať poslednú aktivitu používateľa
+91. Systém vie odhlásiť používateľa po X minútach nečinnosti
+92. Systém vie rozlíšiť aktívnu session od expirovanej session
+93. Systém vie korektne zneplatniť expirovanú session
+94. Systém vie presmerovať používateľa na login pri expirácii session
+95. Systém vie zobraziť dôvod presmerovania po expirácii session
+96. Systém vie chrániť session pred fixation útokom
+97. Systém vie spracovať poškodené session dáta
+98. Systém vie odmietnuť request s neplatnou session štruktúrou
+99. Systém vie pracovať aj keď session neexistuje
+100. Systém vie centralizovať session check do middleware
+
+PASSWORD RESET REQUEST
+======================
+101. Používateľ môže požiadať o reset hesla
+102. Používateľ môže zadať email pre reset hesla
+103. Systém vie validovať email pri reset requeste
+104. Systém vie spracovať reset request pre existujúci účet
+105. Systém vie bezpečne odpovedať aj pre neexistujúci účet
+106. Systém vie vytvoriť reset token
+107. Systém vie uložiť reset token
+108. Systém vie nastaviť expiráciu reset tokenu
+109. Systém vie odoslať email s reset odkazom
+110. Systém vie zneplatniť starší reset token pri novom requeste
+111. Systém vie obmedziť frekvenciu reset requestov
+112. Systém vie logovať vytvorenie reset requestu
+113. Systém vie zobraziť neutrálne hlásenie po reset requeste
+114. Systém vie odmietnuť reset request pre blokovaný účet
+115. Systém vie rozlíšiť reset token od aktivačného tokenu
+
+PASSWORD RESET CONFIRM
+======================
+116. Používateľ môže otvoriť reset odkaz z emailu
+117. Systém vie načítať reset token z URL
+118. Systém vie overiť existenciu reset tokenu
+119. Systém vie overiť platnosť reset tokenu
+120. Systém vie overiť expiráciu reset tokenu
+121. Systém vie odmietnuť neplatný reset token
+122. Systém vie odmietnuť expirovaný reset token
+123. Používateľ môže zadať nové heslo
+124. Systém vie validovať nové heslo
+125. Systém vie validovať potvrdenie nového hesla
+126. Systém vie uložiť nový hash hesla
+127. Systém vie zneplatniť použitý reset token
+128. Systém vie zneplatniť všetky staré reset tokeny po úspešnej zmene hesla
+129. Systém vie ukončiť existujúce sessions po resete hesla
+130. Systém vie zobraziť úspešné dokončenie resetu hesla
+131. Systém vie presmerovať používateľa na login po úspešnom resete
+132. Systém vie logovať úspešný reset hesla
+133. Systém vie logovať neúspešný reset hesla
+
+PASSWORD CHANGE WHILE LOGGED IN
+===============================
+134. Prihlásený používateľ môže zmeniť svoje heslo
+135. Systém vie vyžadovať aktuálne heslo pri zmene hesla
+136. Systém vie overiť aktuálne heslo
+137. Systém vie validovať nové heslo
+138. Systém vie odmietnuť rovnaké nové heslo ako staré
+139. Systém vie uložiť nový hash hesla
+140. Systém vie zneplatniť ostatné sessions po zmene hesla
+141. Systém vie ponechať aktuálnu session aktívnu alebo ju tiež obnoviť
+142. Systém vie logovať zmenu hesla
+
+AUTHORIZATION / ACCESS CONTROL
+==============================
+143. Systém vie rozlišovať hosťa a prihláseného používateľa
+144. Systém vie rozlišovať role používateľov
+145. Systém vie priradiť používateľovi rolu
+146. Systém vie overiť rolu používateľa pri requeste
+147. Systém vie obmedziť endpoint iba pre hostí
+148. Systém vie obmedziť endpoint iba pre prihlásených používateľov
+149. Systém vie obmedziť endpoint podľa role
+150. Systém vie obmedziť endpoint podľa ownership pravidla
+151. Systém vie zistiť, či používateľ vlastní zdroj
+152. Systém vie zistiť, či používateľ môže vykonať akciu nad zdrojom
+153. Systém vie zamietnuť neautorizovanú akciu
+154. Systém vie vrátiť správny response pri neautorizovanom prístupe
+155. Systém vie odlíšiť 401 a 403 stav
+156. Systém vie centralizovať authorization check
+157. Systém vie logovať neautorizované pokusy
+
+PROFILE / ACCOUNT DATA
+======================
+158. Používateľ môže zobraziť svoj profil
+159. Používateľ môže upraviť svoje základné profilové údaje
+160. Systém vie validovať profilové údaje
+161. Systém vie odmietnuť neplatnú zmenu profilu
+162. Používateľ môže zmeniť svoje zobrazované meno
+163. Používateľ môže zmeniť svoj email
+164. Systém vie vyžadovať nové overenie emailu pri zmene emailu
+165. Systém vie držať pôvodný email až do potvrdenia nového
+166. Používateľ môže zmeniť používateľské meno
+167. Systém vie skontrolovať unikátnosť nového používateľského mena
+168. Používateľ môže nastaviť avatar
+169. Používateľ môže odstrániť avatar
+170. Používateľ môže nastaviť verejné profilové údaje
+171. Používateľ môže nastaviť súkromné profilové údaje
+172. Systém vie zobraziť profil iného používateľa podľa pravidiel viditeľnosti
+173. Systém vie rozlíšiť editovateľné a needitovateľné profilové polia
+
+ACCOUNT STATUS
+==============
+174. Systém vie evidovať stav účtu
+175. Systém vie pracovať so stavom pending
+176. Systém vie pracovať so stavom active
+177. Systém vie pracovať so stavom blocked
+178. Systém vie pracovať so stavom suspended
+179. Systém vie pracovať so stavom deleted alebo archived
+180. Systém vie odmietnuť login podľa stavu účtu
+181. Systém vie obmedziť funkcie podľa stavu účtu
+182. Systém vie zmeniť stav účtu administratívne
+183. Systém vie logovať zmenu stavu účtu
+
+EMAIL MANAGEMENT
+================
+184. Systém vie odoslať registračný email
+185. Systém vie odoslať aktivačný email
+186. Systém vie odoslať email pre obnovu aktivácie
+187. Systém vie odoslať email pre reset hesla
+188. Systém vie odoslať potvrdenie zmeny emailu
+189. Systém vie používať šablóny emailov
+190. Systém vie posielať email s bezpečným odkazom
+191. Systém vie ukladať čas odoslania emailu
+192. Systém vie retry-núť odoslanie emailu pri zlyhaní
+193. Systém vie logovať zlyhanie odoslania emailu
+194. Systém vie oddeliť business flow od mail transport vrstvy
+
+SECURITY
+========
+195. Systém vie hashovať heslá bezpečným algoritmom
+196. Systém nikdy neukladá heslo v plain texte
+197. Systém vie bezpečne generovať tokeny
+198. Systém neukladá tokeny v reverzibilnej forme
+199. Systém vie overiť CSRF token na formulároch
+200. Systém vie odmietnuť request bez platného CSRF tokenu
+201. Systém vie chrániť auth endpointy proti brute force
+202. Systém vie limitovať počet login pokusov
+203. Systém vie limitovať počet reset requestov
+204. Systém vie limitovať počet resend activation requestov
+205. Systém vie skryť interné technické chyby pred používateľom
+206. Systém vie logovať bezpečnostné incidenty
+207. Systém vie ukončiť session po zmene kritických údajov
+208. Systém vie regenerovať session ID po citlivých operáciách
+209. Systém vie pracovať so secure cookie nastaveniami
+210. Systém vie pracovať s httponly cookie nastaveniami
+211. Systém vie pracovať so samesite cookie nastaveniami
+212. Systém vie odmietnuť nevalidné alebo manipulované tokeny
+213. Systém vie rozlišovať používateľskú chybu od podozrivého správania
+
+AUDIT / LOGGING / DEBUG
+=======================
+214. Systém vie logovať registráciu
+215. Systém vie logovať aktiváciu účtu
+216. Systém vie logovať login
+217. Systém vie logovať logout
+218. Systém vie logovať zmenu hesla
+219. Systém vie logovať reset hesla
+220. Systém vie logovať zmenu emailu
+221. Systém vie logovať neúspešné auth pokusy
+222. Systém vie logovať neautorizované pokusy
+223. Systém vie logovať expiráciu session
+224. Systém vie logovať expiráciu tokenu
+225. Systém vie logovať zlyhanie mailer vrstvy
+226. Systém vie logovať kritické auth výnimky
+227. Systém vie poskytnúť debug flow pre vývoj
+228. Systém vie oddeliť user-facing response od interného logu
+
+ERROR HANDLING
+==============
+229. Systém vie korektne spracovať neplatný token v URL
+230. Systém vie korektne spracovať chýbajúci token v URL
+231. Systém vie korektne spracovať expirovaný token
+232. Systém vie korektne spracovať poškodené session dáta
+233. Systém vie korektne spracovať neexistujúceho používateľa v session
+234. Systém vie korektne spracovať zlyhanie databázovej operácie
+235. Systém vie korektne spracovať zlyhanie odoslania emailu
+236. Systém vie korektne spracovať race condition pri aktivácii
+237. Systém vie korektne spracovať race condition pri reset tokenoch
+238. Systém vie používateľovi vrátiť zrozumiteľnú chybu
+239. Systém vie vývojárovi uložiť detailnú technickú chybu
+
+CLEANUP / MAINTENANCE
+=====================
+240. Systém vie čistiť expirované pending registrácie
+241. Systém vie čistiť expirované aktivačné tokeny
+242. Systém vie čistiť expirované reset tokeny
+243. Systém vie čistiť neplatné sessions
+244. Systém vie archivovať auth logy
+245. Systém vie odstrániť dočasné dáta po úspešnom dokončení flow
+246. Systém vie periodicky spúšťať cleanup cez cron
+247. Systém vie zabrániť rastu dočasných auth tabuliek bez limitu
+
+ADMIN / MODERATION
+==================
+248. Administrátor vie zobraziť účet používateľa
+249. Administrátor vie zmeniť stav účtu
+250. Administrátor vie zablokovať účet
+251. Administrátor vie odblokovať účet
+252. Administrátor vie vynútiť reset hesla
+253. Administrátor vie zneplatniť sessions používateľa
+254. Administrátor vie zobraziť základný auth audit používateľa
+255. Administrátor vie manuálne aktivovať účet
+256. Administrátor vie manuálne zmazať pending registráciu
+
+EXTENDED / OPTIONAL
+===================
+257. Používateľ môže zostať prihlásený cez remember me
+258. Systém vie vytvoriť persistent login token
+259. Systém vie odhlásiť používateľa zo všetkých zariadení
+260. Používateľ môže vidieť zoznam aktívnych sessions
+261. Používateľ môže ukončiť konkrétnu session
+262. Používateľ môže mať dvojfaktorové overenie
+263. Systém vie potvrdiť citlivú akciu opätovným zadaním hesla
+264. Systém vie poslať bezpečnostné upozornenie pri zmene hesla
+265. Systém vie poslať bezpečnostné upozornenie pri zmene emailu
+266. Systém vie poslať bezpečnostné upozornenie pri podozrivom login-e
+267. Používateľ môže požiadať o zmazanie účtu
+268. Systém vie soft-delete-núť účet
+269. Systém vie anonymizovať účet
+270. Systém vie exportovať základné account dáta používateľa

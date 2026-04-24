@@ -56,6 +56,15 @@ class UserRepository{
         return $result ?: [];
     }
 
+    public static function findByEmail(string $email):array
+    {
+        $db = new Database();
+        $db->query("SELECT * FROM users WHERE email = :email LIMIT 1");
+        $db->bind(":email", $email);
+        $result = $db->single();
+
+        return $result ?: [];        
+    }
 
 
     /**

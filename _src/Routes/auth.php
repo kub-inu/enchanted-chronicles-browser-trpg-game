@@ -1,25 +1,21 @@
 <?php
-/**
- * Authentifikačný modul - registrácia, overenie, prihlásenie, odhlásenie
- */
-$router->get("/auth/register", 'auth', "AuthController@UserRegistrationPage")->middleware('guest');
-//$router->get("/auth/register/verify/{token}", 'auth', "AuthController@registerVerifyPage")->middleware('guest');
 
-//$router->post("/auth/register/verify/{token}", 'auth', "AuthController@createNewUser")->middleware('csrf', 'guest');
-
-
+//Prihlásenie usera
 $router->post("/auth/login", 'auth', "AuthController@login")->middleware('csrf', 'guest');
-$router->post("/auth/logout", 'auth', "AuthController@logout")->middleware('csrf', 'auth');
+
+//Obnova hesla
+$router->get('/reset-password/{token?}', 'auth', "AuthController@resetPasswordPage")->middleware('guest');
+$router->post('/reset-password', 'auth', "AuthController@sendVerifyTokenForResetPassword")->middleware('csrf', 'guest');
+$router->post('/auth/password/reset', 'auth', "AuthController@resetForgottenPassword")->middleware('csrf', 'guest');
 
 
-
-
-
-
-/**
- * Prešlo refaktorom
- */
-
-$router->get("/auth/verify/{token}", 'auth', "AuthController@verifyEmailAdressPage")->middleware('guest');
+// Registrácia nového usera
+$router->get("/auth/register", 'user', "UserController@UserRegistrationPage")->middleware('guest');
 $router->post("/auth/register", 'user', "UserController@register")->middleware('csrf', 'guest');
 
+//Overenie emailovej adresy usera & obbnova expirovaného tokenu
+$router->get("/auth/verify/{token}", 'auth', "AuthController@verifyEmailAdressPage")->middleware('guest');
+$router->post("/auth/verify/resend", 'auth', "AuthController@resendEmailVerify")->middleware('csrf', 'guest');
+
+//Odhlásenie usera
+$router->post("/auth/logout", 'auth', "AuthController@logout")->middleware('csrf', 'auth');

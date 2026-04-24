@@ -1,5 +1,5 @@
 <?php
-namespace App\Modules\Auth\DTO;
+namespace App\Modules\User\DTO;
 
 class AccountCreateData
 {

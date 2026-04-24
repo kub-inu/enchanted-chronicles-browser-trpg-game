@@ -16,6 +16,12 @@
 
 <?php else: ?>
 
+<?php 
+    if($expired){
+        echo $expired . '<br>';
+    }    
+?>
+
 <form action="/auth/login" method="post">
     <input type="text" placeholder="Username" name="username"><br>
     <input type="password" placeholder="Psw" name="password"><br>
@@ -24,5 +30,6 @@
 </form>
 
 <a href="/auth/register">Registrácia</a>
+<a href="/reset-password">Zabudol som heslo</a>
 
 <?php endif; ?>

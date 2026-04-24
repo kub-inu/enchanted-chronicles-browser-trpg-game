@@ -29,7 +29,8 @@ class Router {
 
     private array $controllerMap = [
         "auth" => 'App\\Modules\\Auth\\Controllers\\',
-        "web" => 'App\\Core\\Web\\',
+        "web" => 'App\\Modules\\Web\\Web\\',
+        "account" => 'App\\Modules\\Web\\Account\\',
         "user" => 'App\\Modules\\User\\Controllers\\'
     ];
 

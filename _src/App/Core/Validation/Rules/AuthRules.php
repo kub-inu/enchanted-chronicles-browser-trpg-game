@@ -33,4 +33,19 @@ final class AuthRules
             'character_gender' => ['required', 'in:male,female'],
         ];
     }
+
+    public static function resetPassword(): array
+    {
+        return [
+            'email' => ['required', 'email', 'max:255']
+        ];
+    }
+
+    public static function password(): array
+    {
+        return [
+            'password' => ['required', 'string', 'min:8', 'max:255'],
+            'password_check' => ['required', 'string', 'same:password']           
+        ];
+    }
 }

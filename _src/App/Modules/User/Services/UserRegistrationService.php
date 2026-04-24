@@ -1,23 +1,20 @@
 <?php
 namespace App\Modules\User\Services;
 
-use App\Core\Http\Response;
 use App\Core\Logging\Logger;
 use App\Core\Security\Escaper;
-
-use App\Core\Validation\Validator;
-use App\Core\Validation\Rules\UserRules;
-
-use App\Modules\User\DTO\UserRegistrationData;
-
+use App\Core\Support\Result;
 use App\Core\Database\Database;
+
+//User module
 use App\Modules\User\Repositories\UserRepository;
 use App\Modules\User\Repositories\PendingUserRepository;
-
 use App\Modules\User\DTO\AccountCreateData;
+use App\Modules\User\DTO\UserRegistrationData;
 
-//use App\Core\Security\RateLimit\RateLimiter;
-
+//Validation
+use App\Core\Validation\Validator;
+use App\Core\Validation\Rules\UserRules;
 
 class UserRegistrationService{
 
@@ -27,9 +24,15 @@ class UserRegistrationService{
      * ======================
      */
 
-    public static function register(UserRegistrationData $dto): void
+    public static function register(UserRegistrationData $dto): Result
     {
-        self::registerValidation($dto);
+        $validator = self::registerValidation($dto);
+        if ($validator->fails()) {
+            return Result::validation($validator->errors(), [
+                'username' => $dto->username,
+                'email' => $dto->email
+            ]);
+        }   
 
         $passwordHash = password_hash($dto->password, PASSWORD_DEFAULT);
         $token = bin2hex(random_bytes(32));
@@ -40,11 +43,7 @@ class UserRegistrationService{
                 'email' => $dto->email,
                 'username' => $dto->username,
                 'token' => $tokenHash,
-                'payload_json' => json_encode([
-                    'legal' => $dto->legal,
-                    'registration_date' => date('Y-m-d H:i:s'),
-                    'password' => $passwordHash,
-                ], JSON_UNESCAPED_UNICODE),
+                'password' => $passwordHash,
                 'expires_at' => date('Y-m-d H:i:s', strtotime('+24 hours'))
             ]);
 
@@ -53,21 +52,18 @@ class UserRegistrationService{
                 self::sendVerificationEmail($dto->email, $dto->username, $token);
             }catch(\Throwable $e){
                 Logger::error('Error - Overovací email sa neodoslal', ["message" => $e->getMessage()], 'auth');
-                Response::error('Registrácia bola uložená, ale email sa nepodarilo odoslať. Kontaktuj technickú podporu projektu.');
+                return Result::error('Registrácia bola uložená, ale email sa nepodarilo odoslať. Kontaktuj technickú podporu projektu.');
             }
 
-            Response::success(
-                message: 'Registrácia bola vytvorená. Skontroluj email pre dokončenie registrácie.',
-                data: $pendingId
-            );
+            return Result::success('Registrácia bola vytvorená. Skontroluj email pre dokončenie registrácie.', $pendingId);
 
         }catch(\Throwable $e){
             Logger::error('Error - Registrácia používateľa', ["message" => $e->getMessage()], 'auth');
-            Response::error('Pri vytváraní registrácie nastala chyba.');
+            return Result::error('Pri vytváraní registrácie nastala chyba.');
         }
     }
 
-    public static function registerValidation(UserRegistrationData $dto): void
+    public static function registerValidation(UserRegistrationData $dto): Validator
     {
         $validator = new Validator([
             'username' => $dto->username,
@@ -85,12 +81,7 @@ class UserRegistrationService{
             $validator->addError('email', 'Zadaný email už existuje.');
         }
 
-        if ($validator->fails()) {
-            Response::validation($validator->errors(), [
-                'username' => $dto->username,
-                'email' => $dto->email
-            ]);
-        }        
+        return $validator;   
     }
 
 
@@ -124,13 +115,14 @@ class UserRegistrationService{
     }
 
 
+
     /**
      * ======================
      * DOKONČENIE REGISTRÁCIE
      * ======================
      */
 
-    public static function finishRegistration(AccountCreateData $dto)
+    public static function finishRegistration(AccountCreateData $dto): Result
     {
         $db = new Database();
         try {
@@ -147,11 +139,7 @@ class UserRegistrationService{
 
             $db->endTransaction();
 
-            return [
-                'success' => true,
-                'message' => 'Tvoja registrácia bola dokončená. Môžeš sa prihlásiť.',
-                'user_id' => $uid
-            ];
+            return Result::success('Tvoja registrácia bola dokončená. Môžeš sa prihlásiť.', $uid);
 
         } catch (\Throwable $e){
 
@@ -159,13 +147,7 @@ class UserRegistrationService{
                 $db->cancelTransaction();
             }      
 
-            return [
-                'success' => false,
-                'errors' => [
-                    'system' => 'Pri dokončovaní registrácie nastala chyba.'
-                ]
-            ];
-
+            return Result::error('Pri dokončovaní registrácie nastala chyba.');
         }
     }
 }
