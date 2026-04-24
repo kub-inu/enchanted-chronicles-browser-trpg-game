@@ -12,27 +12,18 @@ class Result
         public int $statusCode = 200
     ) {}
 
-    public static function success(mixed $data = null, ?string $message = 'OK', int $statusCode = 200): self {
-        return new self(
-            success: true,
-            message: $message,
-            data: $data,
-            errors: null,
-            statusCode: $statusCode
-        );
+    // Result::success("Ok", $data);
+    public static function success(?string $message = 'OK', mixed $data = null, int $statusCode = 200): self {
+        return new self(true, $message, $data, null, $statusCode);
     }
 
-    public static function failure(?string $message = 'Error', ?array $errors = null, mixed $data = null, int $statusCode = 400 ): self 
+    // Result::error('Chyba.', $errors, $data);
+    public static function error(?string $message = 'Error', ?array $errors = null, mixed $data = null, int $statusCode = 400 ): self 
     {
-        return new self(
-            success: false,
-            message: $message,
-            data: $data,
-            errors: $errors,
-            statusCode: $statusCode
-        );
+        return new self(false, $message, $data, $errors, $statusCode);
     }
 
+    // Result::validation($errors, $data);
     public static function validation(array $errors, mixed $data = null, ?string $message = 'Validation error', int $statusCode = 422): self 
     {
         return new self(false, $message, $data, $errors, $statusCode);

@@ -6,7 +6,6 @@ namespace App\Core\Exceptions;
 use Throwable;
 use App\Core\Logging\Logger;
 use App\Core\Auth\Auth;
-
 use App\Core\Exceptions\HttpException;
 
 class ErrorHandler
@@ -35,7 +34,6 @@ class ErrorHandler
             self::handleHttpException($e);
             exit;
         }
-
         self::handleThrowable($e);
     }
 
@@ -78,35 +76,35 @@ class ErrorHandler
     {
         error_log('HANDLE THROWABLE HIT: ' . $e->getMessage());
         file_put_contents(
-    ROOT_DIR . '/storage/logs/debug.log',
-    json_encode([
-        'time' => date('Y-m-d H:i:s'),
+            ROOT_DIR . '/storage/logs/debug.log',
+            json_encode([
+                'time' => date('Y-m-d H:i:s'),
 
-        'type' => get_class($e),
-        'message' => $e->getMessage(),
+                'type' => get_class($e),
+                'message' => $e->getMessage(),
 
-        'file' => $e->getFile(),
-        'line' => $e->getLine(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
 
-        'trace' => $e->getTraceAsString(),
+                'trace' => $e->getTraceAsString(),
 
-        'request' => [
-            'method' => $_SERVER['REQUEST_METHOD'] ?? null,
-            'uri' => $_SERVER['REQUEST_URI'] ?? null,
-            'ip' => $_SERVER['REMOTE_ADDR'] ?? null,
-            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null,
-        ],
+                'request' => [
+                    'method' => $_SERVER['REQUEST_METHOD'] ?? null,
+                    'uri' => $_SERVER['REQUEST_URI'] ?? null,
+                    'ip' => $_SERVER['REMOTE_ADDR'] ?? null,
+                    'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null,
+                ],
 
-        'user' => [
-            'id' => Auth::id(),
-            'role' => Auth::role(),
-        ],
+                'user' => [
+                    'id' => Auth::id(),
+                    'role' => Auth::role(),
+                ],
 
-        'session' => $_SESSION ?? [],
+                'session' => $_SESSION ?? [],
 
-    ], JSON_PRETTY_PRINT) . PHP_EOL . str_repeat('-', 80) . PHP_EOL,
-    FILE_APPEND
-);
+            ], JSON_PRETTY_PRINT) . PHP_EOL . str_repeat('-', 80) . PHP_EOL,
+            FILE_APPEND
+        );
 
         http_response_code(500);
 

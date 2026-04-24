@@ -27,6 +27,12 @@ class UserController {
             legal: !empty($request->input('legal'))
         );
 
-        UserRegistrationService::register($dto);
+        $result = UserRegistrationService::register($dto);
+
+        if($result->success){
+            Response::redirect('/', 200);
+        }else{
+            Response::json($result);
+        }
     }
 }

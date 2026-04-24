@@ -4,6 +4,7 @@ namespace App\Core\Auth;
 
 use App\Core\Authorization\Authorization;
 use App\Modules\User\Repositories\UserRepository;
+use App\Core\Session\Session;
 
 
 class Auth 
@@ -12,19 +13,22 @@ class Auth
 
     public static function check(): bool
     {
-        return isset($_SESSION['user_id']);
+        //return isset($_SESSION['user_id']);
+        return Session::has('user_id');
     }
 
     public static function id(): ?int
     {
-        return isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null;
+        //return isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null;
+        return Session::get('user_id', null);
     }
 
 
     //Príprava do budúcna
     public static function character_id(): ?int 
     {
-        return isset($_SESSION['character_id']) ? (int) $_SESSION['character_id'] : null;
+        //return isset($_SESSION['character_id']) ? (int) $_SESSION['character_id'] : null;
+        return Session::get('character_id', null);
     }
 
     /**
@@ -82,11 +86,11 @@ class Auth
 
     public static function login(int $user_id): void 
     {
-        session_regenerate_id(true);
+        Session::regenerate();
         self::$cachedUser = null;
         Authorization::flush();
 
-        $_SESSION['user_id'] = $user_id;
+        Session::set('user_id', $user_id);
     }
 
     public static function logout():void
@@ -94,14 +98,7 @@ class Auth
         self::$cachedUser = null;
         Authorization::flush();
 
-        $_SESSION = [];
-
-        if (ini_get('session.use_cookies')) {
-            $params = session_get_cookie_params();
-            setcookie( session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly'] );
-        }
-
-        session_destroy();
+        Session::destroy();
     }
 
 

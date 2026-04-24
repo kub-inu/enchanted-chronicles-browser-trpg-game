@@ -1,6 +1,7 @@
 <?php
 
 const ROOT_DIR = __DIR__;
+
 require_once ROOT_DIR . '/_src/Helpers/functions.php';
 loadEnv(ROOT_DIR . '/.env');
 
@@ -17,12 +18,6 @@ if ($app['debug']) {
 }
 
 date_default_timezone_set($app['timezone']);
-
-if (php_sapi_name() !== 'cli' && session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-
 
 spl_autoload_register(function ($class) {
     $prefix = 'App\\';
