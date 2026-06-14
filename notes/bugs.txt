@@ -1,1 +1,0 @@
-> Ak neexistuje stránka vo views tak to hodí 500 namiesto 404 (treba asi dať podmienku tam kde sa includuje súbor)
